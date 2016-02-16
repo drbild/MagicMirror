@@ -65,7 +65,7 @@ var StockView = React.createClass({
       elements = _.map(stocks, function (stock, index) {
         var color = stock.Change > 0 ? Styles.colors.green : Styles.colors.red;
         return (
-          <View style={styles.quote} key={index}>
+          <View style={styles.quote} key={'stock-' + index}>
             <Text style={styles.text}>{stock.Symbol} </Text>
             <Text style={[styles.text, {color: color}]}>{Math.abs(stock.Change).toFixed(2)}</Text>
           </View>
@@ -73,7 +73,7 @@ var StockView = React.createClass({
       });
       for (var i = elements.length-1; i > 0; i--) {
         elements.splice(i, 0, (
-            <Text style={styles.separator}>-</Text>
+            <Text style={styles.separator} key={'stock-sep-' + i}>-</Text>
         ));
       }
       return (
