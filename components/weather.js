@@ -62,9 +62,7 @@ var WeatherView = React.createClass({
             <View style={styles.temperature}>
               <Text style={styles.weather}>{weather.now.temperature.f}</Text>
               <Text style={styles.superscript}>o</Text>
-              <Text style={styles.weather}>F ({weather.now.temperature.c}</Text>
-              <Text style={styles.superscript}>o</Text>
-              <Text style={styles.weather}>C)</Text>
+              <Text style={styles.weather}>F</Text>
             </View>
           </View>
         </View>
