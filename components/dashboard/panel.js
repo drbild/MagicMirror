@@ -14,8 +14,10 @@ var {
 var PanelView = React.createClass({
   render: function () {
     var title = this.props.title;
+    var align = this.props.align;
+
     return (
-	<View style={styles.container}>
+	<View style={[styles.container, {alignItems: align}]}>
 	  <Text style={styles.title}>{title}</Text>
 	  {this.props.children}
 	</View>
@@ -25,8 +27,7 @@ var PanelView = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    alignItems: 'center'
+    flexDirection: 'column'
   },
   title: {
     color: '#999',

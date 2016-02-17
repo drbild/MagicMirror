@@ -1,10 +1,11 @@
 'use strict';
 
-var React = require('react-native');
-var Styles = require('../styles.js');
-var Config = require('../env.js');
-var PanelView = require('./dashboard/panel.js');
-var _ = require('lodash');
+var React = require('react-native'),
+    Styles = require('../styles.js'),
+    Config = require('../env.js'),
+    Currency = require('../modules/currency.js'),
+    _ = require('lodash');
+
 var {
   StyleSheet,
   View,
@@ -12,54 +13,69 @@ var {
   Image
 } = React;
 
-function parseCurrency (string) {
-  return Number(string.replace(/[^0-9\.]+/g,""));
+var AccountIcons = {
+  checking: require('image!tellur'),
+  credit: require('image!tellur'),
+  investment: require('image!tellur'),
+  savings: require('image!tellur')
+};
+
+function accountIcon (balance) {
+  var name = balance.account;
+  if (name === "My Checking") {
+    return AccountIcons.checking;
+  } else if (name === "My Savings") {
+    return AccountIcons.savings;
+  } else if (name === "My Credit Card") {
+    return AccountIcons.credit;
+  } else if (name === "My Brokerage") {
+    return AccountIcons.investment;
+  }
 }
 
-function formatCurrency(number) {
-  number = number.toFixed(0) + '';
-  var x = number.split('.');
-  var x1 = x[0];
-  var x2 = x.length > 1 ? '.' + x[1] : '';
-  var rgx = /(\d+)(\d{3})/;
-  while (rgx.test(x1)) {
-    x1 = x1.replace(rgx, '$1' + ',' + '$2');
-  }
-  return "$" + x1 + x2;
+function filterBalances (notes) {
+  return _.chain(notes)
+    .filter(function (note) {
+      return note.type === 'balance';
+    })
+    .map(function (note) {
+      note.balance = Currency.parse(note.balance);
+      return note;
+    })
+    .groupBy(function (note) {
+      return note.account;
+    })
+    .pairs()
+    .map(function (pair) {
+      var notes = pair[1]
+      return _.head(notes);
+    })
+    .sortBy('account')
+    .take(3)
+    .value();
 }
 
 var BalanceView = React.createClass({
-  getBalances: function () {
-    return _.chain(this.props.notes)
-      .filter(function (note) {
-	return note.type === 'balance';
-      })
-      .map(function (note) {
-	note.balance = parseCurrency(note.balance);
-	return note;
-      })
-      .groupBy(function (note) {
-	return note.account;
-      })
-      .pairs()
-      .map(function (pair) {
-	var notes = pair[1]
-	return _.head(notes);
-      })
-      .sortBy('account')
-      .take(3)
-      .value();
-  },
   render: function () {
-    var balances = this.getBalances(),
-      balancesViews;
+    var balance = this.props.balance;
+    return (
+	<View style={styles.view.container}>
+	  <Image source={accountIcon(balance)} style={styles.view.image}/>
+	  <Text style={styles.view.text}>{Currency.format(balance.balance, 0)}</Text>
+	</View>
+    );
+  }
+});
+
+var BalanceList = React.createClass({
+  render: function () {
+    var balances = filterBalances(this.props.notes);
+
+    var balancesViews;
     if (balances.length > 0) {
       balancesViews = _.map(balances, function (balance, index) {
         return (
-          <View style={styles.row} key={'balance_' + index}>
-	    <Image source={require('image!tellur')} style={styles.image}/>
-            <Text style={styles.balance}> {formatCurrency(balance.balance)}</Text>
-          </View>
+       	    <BalanceView key={index} balance={balance}/>
         );
       });
     } else {
@@ -67,34 +83,38 @@ var BalanceView = React.createClass({
     }
 
     return (
-	<PanelView title="Balances">
-	  <View style={styles.container}>
+	  <View style={styles.list.container}>
             {balancesViews}
           </View>
-	</PanelView>
     );
   }
 });
 
+var styles = {
+  view: StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center'
+    },
+    text: {
+      color: '#fff',
+      fontSize: 64
+    },
+    image: {
+      height: 40,
+      width: 40,
+      marginRight: 12
+    }
+  }),
+  list: StyleSheet.create({
+    container: {
+      flexDirection: 'column'
+    }
+  })
+};
 
-var styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  },
-  image: {
-    height: 40,
-    width: 40
-  },
-  balance: {
-    color: '#fff',
-    fontSize: Styles.fontSize.large
-  }
-});
-
-module.exports = BalanceView;
+module.exports = {
+  BalanceView,
+  BalanceList
+}

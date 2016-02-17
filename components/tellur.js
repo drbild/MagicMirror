@@ -4,10 +4,10 @@ var React = require('react-native');
 var Styles = require('../styles.js');
 var Config = require('../env.js');
 var SetIntervalMixin = require('../mixins/set_interval_mixin.js');
-
+var PanelView = require('./dashboard/panel.js');
 var RowView = require('./dashboard/row.js');
 
-var BalanceView = require('./balance.js');
+var Balance = require('./balance.js');
 var BudgetView = require('./budget.js');
 var TransactionView = require('./transaction.js');
 
@@ -57,6 +57,8 @@ function getTellurNotes () {
   });
 }
 
+var BalanceList = Balance.BalanceList;
+
 var TellurView = React.createClass({
   mixins: [SetIntervalMixin],
   getInitialState: function () {
@@ -75,7 +77,9 @@ var TellurView = React.createClass({
       return (
 	<View style={styles.container}>
 	  <RowView>
-	    <BalanceView notes={this.state.notes} />
+	    <PanelView title="Balances" align='flex-start'>
+	      <BalanceList notes={this.state.notes} />
+	    </PanelView>
             <TransactionView notes={this.state.notes} />
           </RowView>
 	  <RowView>

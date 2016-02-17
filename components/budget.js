@@ -59,7 +59,7 @@ var BudgetView = React.createClass({
     }
 
     return (
-	<PanelView title="Monthly Budget">
+	<PanelView title="Monthly Budget" align='flex-start'>
 	  {budgetsViews}	
 	</PanelView>
     );

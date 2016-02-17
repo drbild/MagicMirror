@@ -63,7 +63,7 @@ var TransactionView = React.createClass({
     }
 
     return (
-	<PanelView title="Txs" justify='flex-end'>
+	<PanelView title="Txs" align='flex-end'>
 	  <View style={styles.container}>
 	    {transactionsViews}
           </View>
@@ -76,7 +76,7 @@ var TransactionView = React.createClass({
 var styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    justifyContent: 'flex-end'
+    alignItems: 'flex-end'
   },
   row: {
     flexDirection: 'row',
