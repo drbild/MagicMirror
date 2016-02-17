@@ -22,7 +22,7 @@ var TimeView = React.createClass({
     this.setState({time: moment()});
   },
   render: function () {
-    var time = this.state.time.format('h:mm:ss a');
+    var time = this.state.time.format('h:mm a');
     return (
       <Text style={styles.time}>{time}</Text>
     );
