@@ -4,6 +4,7 @@ var React = require('react-native'),
     TweenState = require('react-tween-state'),
     OAuthSimple = require('oauthsimple'),
     Config = require('../env.js'),
+    SetIntervalMixin = require('../mixins/set_interval_mixin.js'),
     _ = require('lodash');
 
 var {
@@ -39,13 +40,14 @@ function getTweets (users) {
 }
 
 var TwitterView = React.createClass({
-  mixins: [TweenState.Mixin],
+  mixins: [TweenState.Mixin,
+           SetIntervalMixin],
   getInitialState: function () {
     return {tweets: [], tweet: 0};
   },
   rotate: function () {
     var next = this.state.tweet + 1;
-    if (next === this.state.tweets.length) {
+    if (next >= this.state.tweets.length) {
       next = 0;
     }
     this.state.tweet = next;
@@ -69,9 +71,13 @@ var TwitterView = React.createClass({
 
   },
   componentDidMount: function () {
+    this.setInterval(this.refreshTweets, 1000 * 60); // 1 minute updates
+    this.refreshTweets();
+    this.fade(1);
+  },
+  refreshTweets: function () {
     getTweets(this.props.users).then(function (tweets) {
       this.setState({tweets: tweets, tweet: 0});
-      this.fade(1);
     }.bind(this));
   },
   render: function () {
