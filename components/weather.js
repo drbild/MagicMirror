@@ -2,7 +2,8 @@
 
 var React = require('react-native'),
     Config = require('../env.js'),
-    Styles = require('../styles');
+    Styles = require('../styles'),
+    SetIntervalMixin = require('../mixins/set_interval_mixin');
 var {
   StyleSheet,
   View,
@@ -19,6 +20,7 @@ function fetchWeatherReport () {
 }
 
 var WeatherView = React.createClass({
+  mixins: [SetIntervalMixin],
   getInitialState: function () {
     return {weather: null};
   },
@@ -41,12 +43,8 @@ var WeatherView = React.createClass({
     }.bind(this));
   },
   componentDidMount: function () {
-    // fetch weather information
+    this.setInterval(this.updateWeather, 1000 * 60 * 15); // 15 minute updates
     this.updateWeather();
-    setInterval(this.updateWeather, 1000 * 60 * 60); // 1 hour updates
-  },
-  componentWillUnmount: function () {
-    clearInterval(this.interval);
   },
   render: function () {
     var weather = this.state.weather,
