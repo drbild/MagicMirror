@@ -3,6 +3,7 @@
 var React = require('react-native');
 var moment = require('moment');
 var Styles = require('../styles.js');
+var SetIntervalMixin = require('../mixins/set_interval_mixin.js');
 var {
   StyleSheet,
   View,
@@ -10,17 +11,15 @@ var {
 } = React;
 
 var TimeView = React.createClass({
+  mixins: [SetIntervalMixin],
   getInitialState: function () {
     return {time: moment()};
   },
+  componentDidMount: function () {
+    this.setInterval(this.tick, 1000); // 1 second updates
+  },
   tick: function () {
     this.setState({time: moment()});
-  },
-  componentDidMount: function () {
-    this.interval = setInterval(this.tick, 1000);
-  },
-  componentWillUnmount: function () {
-    clearInterval(this.interval);
   },
   render: function () {
     var time = this.state.time.format('h:mm:ss a');
