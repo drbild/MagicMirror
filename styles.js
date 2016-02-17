@@ -8,5 +8,5 @@ module.exports = {
   colors: {
     green: '#4CAF50',
     red: '#F44336'
-  }
+  },
 };

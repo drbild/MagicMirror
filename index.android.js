@@ -13,6 +13,9 @@ var {
   Dimensions
 } = React;
 
+var Styles = require('./styles.js');
+
+
 var WINDOW_WIDTH = Dimensions.get('window').width;
 
 var DateView = require('./components/date'),
@@ -20,33 +23,50 @@ var DateView = require('./components/date'),
     WeatherView = require('./components/weather'),
     StockView = require('./components/stock'),
     TwitterView = require('./components/twitter'),
-    TellurView = require('./components/tellur')
+    TellurView = require('./components/tellur');
+
 
 var MagicMirror = React.createClass({
   render: function() {
     var stocks = ['FB', 'TWTR', 'AAPL', 'GOOGL', 'MSFT', 'TSLA'],
         twitterUsers = ['berniesanders', 'robinpowered', 'elonmusk'];
+
+    var InfoBar = (
+        <View style={styles.infobar}>
+          <View style={[styles.column]}>
+            <WeatherView></WeatherView>
+          </View>
+          <View style={styles.column}>
+            <View style={styles.row}>
+              <DateView></DateView>
+            </View>
+            <View style={[styles.row, {marginTop: -15}]}>
+              <TimeView></TimeView>
+            </View>
+          </View>
+        </View>
+    );
+
+    var TellurHeader = (
+	<View style={styles.tellurheader}>
+          <Text style={styles.h1}>Banking Alerts</Text>
+          <Text style={[styles.h2, {marginTop: -15}]}> by TELLUR</Text>
+	</View>
+    );
+
     return (
       <View style={styles.container}>
-        <View style={styles.row}>
-          <DateView></DateView>
-        </View>
-        <View style={styles.row}>
-          <TimeView></TimeView>
-        </View>
-        <View style={[styles.row, styles.margin, {marginTop: -10}]}>
-          <WeatherView></WeatherView>
-        </View>
-       <View style={[styles.row, styles.margin]}>
-         <TellurView></TellurView>
-       </View>
+        {InfoBar}
+	{TellurHeader}
         <View style={[styles.row, styles.margin]}>
-          <TwitterView users={twitterUsers}></TwitterView>
+           <TellurView></TellurView>
+        </View>
+        <View style={[styles.row, styles.margin]}>
+           <TwitterView users={twitterUsers}></TwitterView>
         </View>
         <View style={styles.stocks}>
           <StockView style={{width: '100%'}} symbols={stocks}></StockView>
         </View>
-
       </View>
     );
   }
@@ -57,9 +77,34 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000'
   },
+  infobar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 50
+  },
+  tellurheader: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginBottom: 20
+  },
+  h1: {
+    color: '#fff',
+    fontSize: Styles.fontSize.large,
+    fontWeight: 'bold'
+  },
+  h2: {
+    color: '#fff',
+    fontSize: Styles.fontSize.medium,
+    fontWeight: 'bold'
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    marginBottom: 0
+  },
+  column: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
     marginBottom: 0
   },
   margin: {

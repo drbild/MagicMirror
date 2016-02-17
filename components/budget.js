@@ -3,6 +3,7 @@
 var React = require('react-native');
 var Styles = require('../styles.js');
 var Config = require('../env.js');
+var PanelView = require('./dashboard/panel.js')
 var _ = require('lodash');
 var {
   StyleSheet,
@@ -58,13 +59,9 @@ var BudgetView = React.createClass({
     }
 
     return (
-      <View style={styles.container}>
-        <View style={styles.row}>
-          <Text style={styles.title}>Budget</Text>
-          <Image source={require('image!tellur')} style={styles.image} />
-        </View>
-        {budgetsViews}
-      </View>
+	<PanelView title="Monthly Budget">
+	  {budgetsViews}	
+	</PanelView>
     );
   }
 });
@@ -72,7 +69,8 @@ var BudgetView = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
   },
   row: {
     flexDirection: 'row',
@@ -83,21 +81,11 @@ var styles = StyleSheet.create({
     height: 40,
     width: 40
   },
-  title: {
-    marginRight: 15,
-    color: '#fff',
-    fontSize: Styles.fontSize.medium
-  },
   text: {
     color: '#fff',
     fontSize: Styles.fontSize.normal,
     textAlign: 'right'
   },
-  balance: {
-    color: '#fff',
-    fontSize: Styles.fontSize.normal,
-    marginLeft: 10
-  }
 });
 
 module.exports = BudgetView;

@@ -3,6 +3,7 @@
 var React = require('react-native');
 var Styles = require('../styles.js');
 var Config = require('../env.js');
+var PanelView = require('./dashboard/panel.js');
 var _ = require('lodash');
 var {
   StyleSheet,
@@ -11,11 +12,31 @@ var {
   Image
 } = React;
 
+function parseCurrency (string) {
+  return Number(string.replace(/[^0-9\.]+/g,""));
+}
+
+function formatCurrency(number) {
+  number = number.toFixed(0) + '';
+  var x = number.split('.');
+  var x1 = x[0];
+  var x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+  }
+  return "$" + x1 + x2;
+}
+
 var BalanceView = React.createClass({
   getBalances: function () {
     return _.chain(this.props.notes)
       .filter(function (note) {
 	return note.type === 'balance';
+      })
+      .map(function (note) {
+	note.balance = parseCurrency(note.balance);
+	return note;
       })
       .groupBy(function (note) {
 	return note.account;
@@ -26,6 +47,7 @@ var BalanceView = React.createClass({
 	return _.head(notes);
       })
       .sortBy('account')
+      .take(3)
       .value();
   },
   render: function () {
@@ -35,8 +57,8 @@ var BalanceView = React.createClass({
       balancesViews = _.map(balances, function (balance, index) {
         return (
           <View style={styles.row} key={'balance_' + index}>
-            <Text style={styles.balance}>{balance.account}: </Text>
-            <Text style={styles.balance}>{balance.balance}</Text>
+	    <Image source={require('image!tellur')} style={styles.image}/>
+            <Text style={styles.balance}> {formatCurrency(balance.balance)}</Text>
           </View>
         );
       });
@@ -45,13 +67,11 @@ var BalanceView = React.createClass({
     }
 
     return (
-      <View style={styles.container}>
-        <View style={styles.row}>
-          <Text style={styles.title}>Account Balances</Text>
-          <Image source={require('image!tellur')} style={styles.image} />
-        </View>
-        {balancesViews}
-      </View>
+	<PanelView title="Balances">
+	  <View style={styles.container}>
+            {balancesViews}
+          </View>
+	</PanelView>
     );
   }
 });
@@ -59,31 +79,21 @@ var BalanceView = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   },
   image: {
     height: 40,
     width: 40
   },
-  title: {
-    marginRight: 15,
-    color: '#fff',
-    fontSize: Styles.fontSize.medium
-  },
-  text: {
-    color: '#fff',
-    fontSize: Styles.fontSize.normal,
-    textAlign: 'right'
-  },
   balance: {
     color: '#fff',
-    fontSize: Styles.fontSize.normal,
-    marginLeft: 10
+    fontSize: Styles.fontSize.large
   }
 });
 

@@ -5,6 +5,8 @@ var Styles = require('../styles.js');
 var Config = require('../env.js');
 var SetIntervalMixin = require('../mixins/set_interval_mixin.js');
 
+var RowView = require('./dashboard/row.js');
+
 var BalanceView = require('./balance.js');
 var BudgetView = require('./budget.js');
 var TransactionView = require('./transaction.js');
@@ -72,15 +74,13 @@ var TellurView = React.createClass({
   render: function () {
       return (
 	<View style={styles.container}>
-	  <View style={[styles.row, styles.margin]}>
-	    <BalanceView notes={this.state.notes}/>
-	  </View>
-	  <View style={[styles.row, styles.margin]}>
-	    <TransactionView notes={this.state.notes}/>
-	  </View>
-	  <View style={styles.row}>
+	  <RowView>
+	    <BalanceView notes={this.state.notes} />
+            <TransactionView notes={this.state.notes} />
+          </RowView>
+	  <RowView>
             <BudgetView notes={this.state.notes}/>
-	  </View>
+	  </RowView>
         </View>
       )
   }
@@ -92,8 +92,11 @@ var styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'space-between'
+  },
+  column: {
+    flexDirection: 'column',
+    alignItems: 'flex-start'
   },
   margin: {
     marginBottom: 30
@@ -103,9 +106,8 @@ var styles = StyleSheet.create({
     width: 40
   },
   title: {
-    marginRight: 15,
-    color: '#fff',
-    fontSize: 36
+    color: '#888',
+    fontSize: 28
   },
   text: {
     color: '#fff',
