@@ -2,39 +2,30 @@
 
 var React = require('react-native'),
     moment = require('moment'),
-    Styles = require('../styles.js');
+    Styles = require('../styles.js'),
+    SetIntervalMixin = require('../mixins/set_interval_mixin.js');
 var {
   StyleSheet,
   View,
   Text
 } = React;
 
-function getOrdinal (day) {
-  var ordinals = ['th', 'st', 'nd', 'rd'],
-      modulus = day%100;
-  return day + (ordinals[modulus - 20]%10) || ordinals[modulus] || ordinals[0];
-}
-
 var DateView = React.createClass({
+  mixins: [SetIntervalMixin],
   getInitialState: function () {
     return {date: moment()};
+  },
+  componentDidMount: function () {
+    this.setInterval(this.tick, 1000 * 60); // 1 minute
   },
   tick: function () {
     this.setState({date: moment()});
   },
-  componentDidMount: function () {
-    this.interval = setInterval(this.tick, 1000 * 60 * 60);
-  },
-  componentWillUnmount: function () {
-    clearInterval(this.interval);
-  },
   render: function () {
-    var date = this.state.date.format('dddd, MMMM D'),
-        ordinal = this.state.date.format('');
+    var date = this.state.date.format('dddd [the] Do');
     return (
       <View style={styles.row}>
         <Text style={styles.date}>{date}</Text>
-        <Text style={styles.ordinal}>{getOrdinal(this.state.date.day())}</Text>
       </View>
     );
   }
@@ -47,10 +38,6 @@ var styles = StyleSheet.create({
   date: {
     fontSize: Styles.fontSize.normal,
     color: '#fff'
-  },
-  ordinal: {
-    color: '#fff',
-    fontSize: Styles.fontSize.normal-10
   }
 });
 
