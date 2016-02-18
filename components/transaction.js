@@ -60,6 +60,19 @@ var TimelinePoint = React.createClass({
   }
 });  
 
+
+
+var TimelineSpace = React.createClass({
+  render: function() {
+    return (
+	<View style={this.props.style}>
+	  <View style={[styles.timeline.spacer, {borderColor: '#fff', borderRightWidth: 1}]} />
+	  <View style={[styles.timeline.spacer, {borderColor: '#fff', borderLeftWidth: 1}]} />
+	</View>
+    )
+  }
+});
+
 var TransactionView =  React.createClass({
   render: function() {
     var tx = this.props.transaction;
@@ -71,9 +84,9 @@ var TransactionView =  React.createClass({
 	    </View>
 	    <TimelinePoint image={transactionIcon(tx)} style={styles.timeline.point}/>
     	  </View>
-    	  <View style={styles.util.row}>
-    	    <Text style={styles.view.merchant}>Merchant merchant</Text>
-	    <View style={styles.timeline.space}/>
+    	  <View style={[styles.util.row, {height: 25, marginTop: -7}]}>
+ 	    <Text style={styles.view.merchant}>Merchant merchant</Text>
+	    <TimelineSpace style={styles.timeline.space}/>
     	  </View>
     	</View>
     );
@@ -114,8 +127,11 @@ var styles = {
       alignItems: 'flex-end'
     },
     row: {
+      borderColor: 'purple',
+      borderWidth: 0,
       flexDirection: 'row',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
+      alignItems: 'stretch'
     }
   }),
   timeline: {
@@ -128,8 +144,14 @@ var styles = {
       marginLeft: timelineMarginLeft
     },
     space: {
-      width: timelineWidth,
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
       marginLeft: timelineMarginLeft
+    },
+    spacer: {
+      width: timelineWidth / 2,
+      alignSelf: 'stretch'
     }
   },
   view: StyleSheet.create({  
