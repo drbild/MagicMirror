@@ -90,8 +90,9 @@ var BudgetView = React.createClass({
     var budget = this.props.budget;
     return (
 	<View style={styles.view.container}>
-	  <View style={{borderColor: 'purple', borderWidth: 1, height: 100, alignItems: 'center', justifyContent: 'center'}}>
-	    <CircleView />
+	  <View style={{flexDirection: 'column', borderColor: 'purple', borderWidth: 1, height: 100, width: 100}}>
+	    <CircleView style={{position: 'absolute', left: 0, right: 0}}/>
+	    <Image source={budgetIcon(budget)} style={[styles.view.image, {position: 'absolute', left: 32, top: 32}]}/>
 	  </View>
 	  <Text style={styles.view.text}>{Currency.format(budget.remaining, 0)} left</Text>
 	</View>
@@ -132,8 +133,8 @@ var styles = {
       alignItems: 'center'
     },
     image: {
-      height: 35,
-      width: 35
+      height: 36,
+      width: 36
     },
     text: {
       color: '#fff',
