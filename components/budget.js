@@ -10,8 +10,19 @@ var {
   StyleSheet,
   View,
   Text,
-  Image
+  Image,
+  ART,
 } = React;
+
+var {
+  Surface,
+  Path,
+  Group,
+  Transform,
+  Shape
+} = ART;
+
+console.log("HW ART " + Object.keys(ART));
 
 var BudgetIcons = {
   entertainment: require('image!tellur'),
@@ -56,13 +67,31 @@ function filterBudgets (notes) {
     .value();
 }
 
+var DONUT = "M50,0 A50,50,0,1,1,0,50 L15,50 A35,35,0,1,0,50,15 L50,0";
+
+var CircleView = React.createClass({
+  render: function() {
+    return (
+      <View style={this.props.style}>
+	<Surface width={100} height={100}>
+	  <Group>
+	    <Shape fill="white" d={DONUT} />
+          </Group>
+        </Surface>
+      </View>
+    );
+  }
+});
+
+//	    <Image source={budgetIcon(budget)} style={styles.view.image}/>
+
 var BudgetView = React.createClass({
   render: function () {
     var budget = this.props.budget;
     return (
 	<View style={styles.view.container}>
 	  <View style={{borderColor: 'purple', borderWidth: 1, height: 100, alignItems: 'center', justifyContent: 'center'}}>
-	    <Image source={budgetIcon(budget)} style={styles.view.image}/>
+	    <CircleView />
 	  </View>
 	  <Text style={styles.view.text}>{Currency.format(budget.remaining, 0)} left</Text>
 	</View>
