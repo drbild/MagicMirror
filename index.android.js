@@ -22,14 +22,13 @@ var DateView = require('./components/date'),
     TimeView = require('./components/time'),
     WeatherView = require('./components/weather'),
     StockView = require('./components/stock'),
-    TwitterView = require('./components/twitter'),
-    TellurView = require('./components/tellur');
-
+    TellurView = require('./components/tellur'),
+    QuoteView = require('./components/quote'),
+    RowView = require('./components/dashboard/row');
 
 var MagicMirror = React.createClass({
   render: function() {
-    var stocks = ['FB', 'TWTR', 'AAPL', 'GOOGL', 'MSFT', 'TSLA'],
-        twitterUsers = ['berniesanders', 'robinpowered', 'elonmusk'];
+    var stocks = ['FB', 'TWTR', 'AAPL', 'GOOGL', 'MSFT', 'TSLA']
 
     var InfoBar = (
         <View style={styles.infobar}>
@@ -59,18 +58,17 @@ var MagicMirror = React.createClass({
         {InfoBar}
 	{TellurHeader}
         <View style={[styles.row, styles.margin]}>
-           <TellurView></TellurView>
-        </View>
-        <View style={[styles.row, styles.margin]}>
-           <TwitterView users={twitterUsers}></TwitterView>
+           <TellurView />
         </View>
         <View style={styles.stocks}>
-          <StockView style={{width: '100%'}} symbols={stocks}></StockView>
+	  <QuoteView />
         </View>
       </View>
     );
   }
 });
+
+//          <StockView style={{width: '100%'}} symbols={stocks}></StockView>
 
 var styles = StyleSheet.create({
   container: {
