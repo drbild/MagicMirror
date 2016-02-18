@@ -1,10 +1,11 @@
 'use strict';
 
-var React = require('react-native');
-var Styles = require('../styles.js');
-var Config = require('../env.js');
-var PanelView = require('./dashboard/panel.js')
-var _ = require('lodash');
+var React    = require('react-native'),
+    Styles   = require('../styles.js'),
+    Config   = require('../env.js'),
+    Currency = require('../modules/currency.js'),
+    _        = require('lodash');
+
 var {
   StyleSheet,
   View,
@@ -12,46 +13,72 @@ var {
   Image
 } = React;
 
-function parseCurrency (string) {
-  return Number(string.replace(/[^0-9\.]+/g,""));
+var BudgetIcons = {
+  entertainment: require('image!tellur'),
+  food: require('image!tellur'),
+  generic: require('image!tellur'),
+  personal: require('image!tellur')
+};
+
+function budgetIcon (budget) {
+  if (budget.category === 'entertainment') {
+    return BudgetIcons.entertainment;
+  } else if (budget.category === 'food') {
+    return BudgetIcons.food;
+  } else if (budget.category === 'personal') {
+    return BudgetIcons.personal;
+  } else {
+    return BudgetIcons.generic;
+  }
 }
 
-function formatCurrency(number) {
-  return '$' + number.toFixed(2);
+function filterBudgets (notes) {
+  return _.chain(notes)
+    .filter(function (note) {
+      return note.type === 'budget';
+    })
+    .map(function (note) {
+      note.used = Currency.parse(note.used);
+      note.remaining = Currency.parse(note.remaining);
+      note.total = note.used + note.remaining;
+      return note;
+    })
+    .groupBy(function (note) {
+      return note.category;
+    })
+    .pairs()
+    .map(function (pair) {
+      var notes = pair[1];
+      return _.head(notes);
+    })
+    .sortBy('category')
+    .take(3)
+    .value();
 }
 
 var BudgetView = React.createClass({
-  getBudgets: function () {
-    return _.chain(this.props.notes)
-      .filter(function (note) {
-	return note.type === 'budget';
-      })
-      .map(function (note) {
-	note.used = parseCurrency(note.used);
-	note.remaining = parseCurrency(note.remaining);
-	note.total = note.used + note.remaining;
-	return note;
-      })
-      .groupBy(function (note) {
-	return note.category;
-      })
-      .pairs()
-      .map(function (pair) {
-	var notes = pair[1];
-	return _.head(notes);
-      })
-      .sortBy('category')
-      .value();
-  },
   render: function () {
-    var budgets = this.getBudgets(),
-      budgetsViews;
+    var budget = this.props.budget;
+    return (
+	<View style={styles.view.container}>
+	  <View style={{borderColor: 'purple', borderWidth: 1, height: 100, alignItems: 'center', justifyContent: 'center'}}>
+	    <Image source={budgetIcon(budget)} style={styles.view.image}/>
+	  </View>
+	  <Text style={styles.view.text}>{Currency.format(budget.remaining, 0)} left</Text>
+	</View>
+    );
+  }
+});
+
+var BudgetList = React.createClass({
+  render: function () {
+    var budgets = filterBudgets(this.props.notes);
+    console.log("HW budgets " + budgets);
+    var budgetsViews;
     if (budgets.length > 0) {
       budgetsViews = _.map(budgets, function (budget, index) {
         return (
-          <View style={styles.row} key={'budget_' + index}>
-            <Text style={styles.text}>[{budget.category}] {formatCurrency(budget.remaining)} of {formatCurrency(budget.total)} remaining</Text>
-          </View>
+	  <BudgetView key={index} budget={budget}/>
         );
       });
     } else {
@@ -59,33 +86,44 @@ var BudgetView = React.createClass({
     }
 
     return (
-	<PanelView title="Monthly Budget" align='flex-start'>
+	<View style={styles.list.container}>
 	  {budgetsViews}	
-	</PanelView>
+	</View>
     );
   }
 });
 
 
-var styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
-  },
-  image: {
-    height: 40,
-    width: 40
-  },
-  text: {
-    color: '#fff',
-    fontSize: Styles.fontSize.normal,
-    textAlign: 'right'
-  },
-});
+var styles = {
+  view: StyleSheet.create({
+    container: {
+      borderColor: 'yellow',
+      borderWidth: 1,
+      flexDirection: 'column',
+      alignItems: 'center'
+    },
+    image: {
+      height: 35,
+      width: 35
+    },
+    text: {
+      color: '#fff',
+      fontSize: 30
+    }
+  }),
+  list: StyleSheet.create({
+    container: {
+      borderColor: 'red',
+      borderWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignSelf: 'stretch'
+    }
+  })
+};
 
-module.exports = BudgetView;
+
+module.exports = {
+  BudgetView,
+  BudgetList
+};

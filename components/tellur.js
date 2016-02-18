@@ -8,7 +8,7 @@ var PanelView = require('./dashboard/panel.js');
 var RowView = require('./dashboard/row.js');
 
 var Balance = require('./balance.js');
-var BudgetView = require('./budget.js');
+var Budget = require('./budget.js');
 var Transaction = require('./transaction.js');
 
 var _ = require('lodash');
@@ -83,7 +83,9 @@ var TellurView = React.createClass({
 	    </PanelView>
           </RowView>
 	  <RowView>
-            <BudgetView notes={this.state.notes}/>
+	    <PanelView title="Monthly Budget" align='flex-start'>
+              <Budget.BudgetList notes={this.state.notes}/>
+            </PanelView>
 	  </RowView>
         </View>
       )
