@@ -48,28 +48,24 @@ function filterTransactions (notes) {
     .value();
 }
 
-var TimelinePoint = React.createClass({
-  render: function() {
-    var image = this.props.image;
-    var style = this.props.style;
-    return (
-	<View style={style}> 
-    	  <Image source={image} style={styles.timeline.image}/>
-	</View>
-    );
-  }
-});  
-
-
-
-var TimelineSpace = React.createClass({
+var VerticalLine = React.createClass({
   render: function() {
     return (
-	<View style={this.props.style}>
-	  <View style={[styles.timeline.spacer, {borderColor: '#fff', borderRightWidth: 1}]} />
-	  <View style={[styles.timeline.spacer, {borderColor: '#fff', borderLeftWidth: 1}]} />
+	<View style={[styles.line.container, this.props.style]}>
+	  <View style={[styles.line.spacer, {borderColor: 'yellow', borderWidth: 1}]} />
+	  <View style={[styles.line.spacer, {borderColor: 'red', borderWidth: 1}]} />
 	</View>
     )
+  }
+});
+
+var TimelineSection = React.createClass({
+  render: function() {
+    return (
+	<View style={[this.props.style, styles.timeline.section]}>
+	  {this.props.children}
+	</View>
+    );
   }
 });
 
@@ -78,15 +74,20 @@ var TransactionView =  React.createClass({
     var tx = this.props.transaction;
     return (
 	<View style={styles.util.column}>
-	  <View style={[styles.util.row, {alignItems: 'center', paddingTop: 8}]}>
-	    <View style={{alignItems: 'stretch'}}>
-	      <Text style={styles.view.amount}>{Currency.format(tx.amount, 2)}</Text>
-	    </View>
-	    <TimelinePoint image={transactionIcon(tx)} style={styles.timeline.point}/>
+	  <View style={[styles.util.row, {height: 45, alignItems: 'center'}]}>
+	    <Text style={styles.view.amount}>{Currency.format(tx.amount, 2)}</Text>
+	    <TimelineSection>
+              <VerticalLine style={{position: 'absolute', left:0, right:0, bottom: 0}}/>
+	      <View style={{alignSelf: 'stretch', borderColor: '#green', borderWidth: 1, position:'absolute', left: 0, right: 0}}>  
+    	        <Image source={transactionIcon(tx)} style={[styles.timeline.image]}/>
+	      </View>
+            </TimelineSection>
     	  </View>
     	  <View style={[styles.util.row, {height: 25, marginTop: -7}]}>
  	    <Text style={styles.view.merchant}>Merchant merchant</Text>
-	    <TimelineSpace style={styles.timeline.space}/>
+            <TimelineSection>
+              <VerticalLine style={{position: 'absolute', left:0, right:0}}/>
+	    </TimelineSection>
     	  </View>
     	</View>
     );
@@ -128,30 +129,40 @@ var styles = {
     },
     row: {
       borderColor: 'purple',
-      borderWidth: 0,
+      borderWidth: 1,
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'stretch'
     }
   }),
+  line: {
+    container: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'stretch'
+    },
+    spacer: {
+      flex: 1
+    }
+  },
   timeline: {
+    section: {
+      borderColor: 'yellow',
+      borderWidth: 1,
+      flexDirection: 'row',
+      alignSelf: 'stretch',
+      width: timelineWidth,
+      marginLeft: timelineMarginLeft,
+    },
     image: {
       width: timelineWidth,
       height: timelineWidth
     },
     point: { 
       width: timelineWidth,
-      marginLeft: timelineMarginLeft
-    },
-    space: {
       flexDirection: 'row',
       justifyContent: 'flex-start',
-      alignItems: 'center',
-      marginLeft: timelineMarginLeft
-    },
-    spacer: {
-      width: timelineWidth / 2,
-      alignSelf: 'stretch'
+      alignItems: 'center'
     }
   },
   view: StyleSheet.create({  
