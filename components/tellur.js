@@ -9,7 +9,7 @@ var RowView = require('./dashboard/row.js');
 
 var Balance = require('./balance.js');
 var BudgetView = require('./budget.js');
-var TransactionView = require('./transaction.js');
+var Transaction = require('./transaction.js');
 
 var _ = require('lodash');
 var {
@@ -57,8 +57,6 @@ function getTellurNotes () {
   });
 }
 
-var BalanceList = Balance.BalanceList;
-
 var TellurView = React.createClass({
   mixins: [SetIntervalMixin],
   getInitialState: function () {
@@ -78,9 +76,11 @@ var TellurView = React.createClass({
 	<View style={styles.container}>
 	  <RowView>
 	    <PanelView title="Balances" align='flex-start'>
-	      <BalanceList notes={this.state.notes} />
+	      <Balance.BalanceList notes={this.state.notes} />
 	    </PanelView>
-            <TransactionView notes={this.state.notes} />
+	    <PanelView title="Transactions" align='flex-end'>
+	      <Transaction.TransactionList notes={this.state.notes} />
+	    </PanelView>
           </RowView>
 	  <RowView>
             <BudgetView notes={this.state.notes}/>
