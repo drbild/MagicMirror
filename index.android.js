@@ -87,11 +87,13 @@ var styles = StyleSheet.create({
   },
   h1: {
     color: '#fff',
+    fontFamily: 'sans-serif-condensed',
     fontSize: Styles.fontSize.large,
     fontWeight: 'bold'
   },
   h2: {
     color: '#fff',
+    fontFamily: 'sans-serif-condensed',
     fontSize: Styles.fontSize.medium,
     fontWeight: 'bold'
   },
