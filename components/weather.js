@@ -13,7 +13,7 @@ var {
 
 function fetchWeatherReport () {
   var requestEndpoint = 'https://api.forecast.io/forecast/' + Config.forecastio.access_token + '/';
-  requestEndpoint += '43.918364,-78.683535';
+  requestEndpoint += '41.881832,-87.623177';
   return fetch(requestEndpoint).then(function (response) {
     return response.json();
   });
