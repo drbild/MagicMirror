@@ -1,5 +1,8 @@
 "use strict";
 
+var Config = require('../env.js'),
+    _      = require('lodash')
+
 var AccountIcons = {
   checking: require('image!checkbook'),
   credit: require('image!credit_card'),
@@ -16,25 +19,29 @@ var CategoryIcons = {
 };
 
 function iconForAccount (name) {
-  if (name === "My Checking") {
+  var accounts = Config.accounts;
+
+  if (_.includes(accounts.checking, name)) {
     return AccountIcons.checking;
-  } else if (name === "My Savings") {
-    return AccountIcons.savings;
-  } else if (name === "My Credit Card") {
+  } else if (_.includes(accounts.credit, name)) {
     return AccountIcons.credit;
-  } else if (name === "My Retirement") {
+  } else if (_.includes(accounts.investment, name)) {
     return AccountIcons.investment;
+  } else if (_.includes(accounts.savings, name)) {
+    return AccountIcons.savings;
   } else {
     return AccountIcons.general;
   }
 }
 
 function iconForCategory (name) {
-  if (name === 'entertainment') {
+  var categories = Config.categories;
+
+  if (_.includes(categories.entertainment, name)) {
     return CategoryIcons.entertainment;
-  } else if (name === 'food') {
+  } else if (_.includes(categories.food, name)) {
     return CategoryIcons.food;
-  } else if (name === 'shopping' | name === 'clothing') {
+  } else if (_.includes(categories.shopping, name)) {
     return CategoryIcons.shopping;
   } else {
     return CategoryIcons.generic;
