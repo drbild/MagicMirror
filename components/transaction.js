@@ -4,6 +4,8 @@ var React    = require('react-native'),
     Styles   = require('../styles.js'),
     Config   = require('../env.js'),
     Currency = require('../modules/currency.js'),
+    Icons    = require('../modules/icons.js'),
+    Timeline = require('./timeline.js'),
     _        = require('lodash');
 
 var {
@@ -12,28 +14,6 @@ var {
   Text,
   Image
 } = React;
-
-var TransactionIcons = {
-  checking: require('image!tellur'),
-  credit: require('image!tellur'),
-  savings: require('image!tellur'),
-  investment: require('image!tellur'),
-  general: require('image!tellur')
-};
-
-function transactionIcon (tx) {
-  if (tx.account === 'My Checking') {
-    return TransactionIcons.checking;
-  } else if (tx.account === 'My Credit Card') {
-    return TransactionIcons.credit;
-  } else if (tx.account === 'My Savings') {
-    return TransactionIcons.savings;
-  } else if (tx.account === 'My Brokerage') {
-    return TransactionIcons.invesment;
-  } else {
-    return TransactionIcons.general;
-  }
-}
 
 function filterTransactions (notes) {
   return _.chain(notes)
@@ -48,47 +28,62 @@ function filterTransactions (notes) {
     .value();
 }
 
-var VerticalLine = React.createClass({
-  render: function() {
-    return (
-	<View style={[styles.line.container, this.props.style]}>
-	  <View style={[styles.line.spacer, {borderColor: 'yellow', borderWidth: 1}]} />
-	  <View style={[styles.line.spacer, {borderColor: 'red', borderWidth: 1}]} />
-	</View>
-    )
-  }
-});
+var TIMELINE_WIDTH      = 25,
+    TIMELINE_MARGIN     = 10,
+    AMOUNT_ROW_HEIGHT   = 40,
+    MERCHANT_ROW_HEIGHT = 20,
+    ICON_SIZE           = 15;
 
-var TimelineSection = React.createClass({
+var AmountRowView = React.createClass({
   render: function() {
+    var tx = this.props.transaction;
+
     return (
-	<View style={[this.props.style, styles.timeline.section]}>
-	  {this.props.children}
+      <View style={styles.row.amount}>
+	<Text style={styles.view.amount}>{Currency.format(tx.amount, 2)}</Text>
+	<View style={[styles.view.timeline, {height: AMOUNT_ROW_HEIGHT}]}>
+	  <Timeline.Point height      = {AMOUNT_ROW_HEIGHT}
+                          width       = {TIMELINE_WIDTH}
+                          radius      = {TIMELINE_WIDTH / 2}
+                          fillColor   = {'#fff'}
+                          strokeColor = {'#fff'}
+                          strokeWidth = {2}
+	                  style       = {{position: 'absolute'}} />
+	  <Image source={Icons.forAccount(tx.account, 'black')} resizeMode={'contain'} style={styles.view.icon} />
 	</View>
+      </View>
     );
   }
 });
+
+var MerchantRowView = React.createClass({
+  render: function() {
+    var tx = this.props.transaction;
+
+    return (
+	<View style={styles.row.merchant}>
+	  <Text style={styles.view.merchant}>{tx.merchant}</Text>
+          <View style={styles.view.timeline}>
+	  <Timeline.Spacer height      = {MERCHANT_ROW_HEIGHT}
+                          width       = {TIMELINE_WIDTH}
+                          strokeColor = {'#fff'}
+                          strokeWidth = {2} />
+	  </View>
+        </View>
+    );
+  }
+});
+
+//    	  <Image source={Icons.forAccount(tx.account)} style={[styles.timeline.image]}/>
+
 
 var TransactionView =  React.createClass({
   render: function() {
     var tx = this.props.transaction;
     return (
-	<View style={styles.util.column}>
-	  <View style={[styles.util.row, {height: 45, alignItems: 'center'}]}>
-	    <Text style={styles.view.amount}>{Currency.format(tx.amount, 2)}</Text>
-	    <TimelineSection>
-              <VerticalLine style={{position: 'absolute', left:0, right:0, bottom: 0}}/>
-	      <View style={{alignSelf: 'stretch', borderColor: '#green', borderWidth: 1, position:'absolute', left: 0, right: 0}}>  
-    	        <Image source={transactionIcon(tx)} style={[styles.timeline.image]}/>
-	      </View>
-            </TimelineSection>
-    	  </View>
-    	  <View style={[styles.util.row, {height: 25, marginTop: -7}]}>
- 	    <Text style={styles.view.merchant}>Merchant merchant</Text>
-            <TimelineSection>
-              <VerticalLine style={{position: 'absolute', left:0, right:0}}/>
-	    </TimelineSection>
-    	  </View>
+	<View style={styles.view.container}>
+	  <AmountRowView transaction={tx} />
+	  <MerchantRowView transaction={tx} />
     	</View>
     );
   }
@@ -118,54 +113,24 @@ var TransactionList = React.createClass({
 });
 
 
-var timelineWidth = 20;
-var timelineMarginLeft = 10;
-
 var styles = {
-  util: StyleSheet.create({
-    column: {
+  row: StyleSheet.create({
+    amount: {
+      height: AMOUNT_ROW_HEIGHT,
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    merchant: {
+      height: MERCHANT_ROW_HEIGHT,
+      flexDirection: 'row',
+      alignItems: 'flex-end'
+    }
+  }),
+  view: StyleSheet.create({
+    container: {
       flexDirection: 'column',
       alignItems: 'flex-end'
     },
-    row: {
-      borderColor: 'purple',
-      borderWidth: 1,
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'stretch'
-    }
-  }),
-  line: {
-    container: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'stretch'
-    },
-    spacer: {
-      flex: 1
-    }
-  },
-  timeline: {
-    section: {
-      borderColor: 'yellow',
-      borderWidth: 1,
-      flexDirection: 'row',
-      alignSelf: 'stretch',
-      width: timelineWidth,
-      marginLeft: timelineMarginLeft,
-    },
-    image: {
-      width: timelineWidth,
-      height: timelineWidth
-    },
-    point: { 
-      width: timelineWidth,
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      alignItems: 'center'
-    }
-  },
-  view: StyleSheet.create({  
     amount: {
       color: '#fff',
       fontSize: 32
@@ -173,11 +138,23 @@ var styles = {
     merchant: {
       color: '#fff',
       fontSize: 18
+    },
+    icon: {
+      height: ICON_SIZE,
+      width: ICON_SIZE,
+      position: 'absolute',
+      left: (TIMELINE_WIDTH - ICON_SIZE) / 2,
+      top: (AMOUNT_ROW_HEIGHT - ICON_SIZE) / 2
+    },
+    timeline: {
+      width: TIMELINE_WIDTH,
+      marginLeft: TIMELINE_MARGIN
     }
   }),
   list: StyleSheet.create({
     container: {
-      flexDirection: 'column'
+      flexDirection: 'column',
+      alignItems: 'flex-end'
     }
   })
 }
