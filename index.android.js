@@ -10,6 +10,7 @@ var {
   StyleSheet,
   Text,
   View,
+  Image,
   Dimensions
 } = React;
 
@@ -49,7 +50,10 @@ var MagicMirror = React.createClass({
     var TellurHeader = (
 	<View style={styles.tellurheader}>
           <Text style={styles.h1}>Banking Alerts</Text>
-          <Text style={[styles.h2, {marginTop: -15}]}> by TELLUR</Text>
+	  <View style={{flexDirection: 'row', alignItems: 'flex-end' }}>
+            <Text style={[styles.h2, {marginTop: -15}]}>  by  </Text>
+	    <Image source={require('image!tellur_combo')} resizeMode={'contain'} style={{width: 175}} />
+	  </View>
 	</View>
     );
 
