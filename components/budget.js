@@ -4,6 +4,7 @@ var React    = require('react-native'),
     Styles   = require('../styles.js'),
     Config   = require('../env.js'),
     Currency = require('../modules/currency.js'),
+    DonutView = require('./donut'),
     _        = require('lodash');
 
 var {
@@ -22,13 +23,11 @@ var {
   Shape
 } = ART;
 
-console.log("HW ART " + Object.keys(ART));
-
 var BudgetIcons = {
-  entertainment: require('image!tellur'),
-  food: require('image!tellur'),
+  entertainment: require('image!ticket'),
+  food: require('image!cutlery'),
+  shopping: require('image!shopping_basket'),
   generic: require('image!tellur'),
-  personal: require('image!tellur')
 };
 
 function budgetIcon (budget) {
@@ -36,7 +35,7 @@ function budgetIcon (budget) {
     return BudgetIcons.entertainment;
   } else if (budget.category === 'food') {
     return BudgetIcons.food;
-  } else if (budget.category === 'personal') {
+  } else if (budget.category === 'shopping' | budget.category === 'clothing') {
     return BudgetIcons.personal;
   } else {
     return BudgetIcons.generic;
@@ -67,32 +66,15 @@ function filterBudgets (notes) {
     .value();
 }
 
-var DONUT = "M50,0 A50,50,0,1,1,0,50 L15,50 A35,35,0,1,0,50,15 L50,0";
-
-var CircleView = React.createClass({
-  render: function() {
-    return (
-      <View style={this.props.style}>
-	<Surface width={100} height={100}>
-	  <Group>
-	    <Shape fill="white" d={DONUT} />
-          </Group>
-        </Surface>
-      </View>
-    );
-  }
-});
-
-//	    <Image source={budgetIcon(budget)} style={styles.view.image}/>
-
 var BudgetView = React.createClass({
   render: function () {
     var budget = this.props.budget;
+    var amount = (budget.remaining / budget.total);
     return (
 	<View style={styles.view.container}>
-	  <View style={{flexDirection: 'column', borderColor: 'purple', borderWidth: 1, height: 100, width: 100}}>
-	    <CircleView style={{position: 'absolute', left: 0, right: 0}}/>
-	    <Image source={budgetIcon(budget)} style={[styles.view.image, {position: 'absolute', left: 32, top: 32}]}/>
+	  <View style={{flexDirection: 'column', height: 102, width: 102}}>
+	    <DonutView style={{position: 'absolute', left: 0, right: 0}} amount={amount} fillColor={'#fff'} thickness={14} radius={50} />
+	    <Image source={budgetIcon(budget)} style={styles.view.image} resizeMode={'contain'} />
 	  </View>
 	  <Text style={styles.view.text}>{Currency.format(budget.remaining, 0)} left</Text>
 	</View>
@@ -103,7 +85,7 @@ var BudgetView = React.createClass({
 var BudgetList = React.createClass({
   render: function () {
     var budgets = filterBudgets(this.props.notes);
-    console.log("HW budgets " + budgets);
+
     var budgetsViews;
     if (budgets.length > 0) {
       budgetsViews = _.map(budgets, function (budget, index) {
@@ -127,14 +109,15 @@ var BudgetList = React.createClass({
 var styles = {
   view: StyleSheet.create({
     container: {
-      borderColor: 'yellow',
-      borderWidth: 1,
       flexDirection: 'column',
       alignItems: 'center'
     },
     image: {
-      height: 36,
-      width: 36
+      height: 32,
+      width: 32,
+      position: 'absolute',
+      left: 35,
+      top: 35
     },
     text: {
       color: '#fff',
@@ -143,8 +126,6 @@ var styles = {
   }),
   list: StyleSheet.create({
     container: {
-      borderColor: 'red',
-      borderWidth: 1,
       flexDirection: 'row',
       justifyContent: 'space-around',
       alignSelf: 'stretch'
