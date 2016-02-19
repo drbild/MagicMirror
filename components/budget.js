@@ -36,7 +36,7 @@ function budgetIcon (budget) {
   } else if (budget.category === 'food') {
     return BudgetIcons.food;
   } else if (budget.category === 'shopping' | budget.category === 'clothing') {
-    return BudgetIcons.personal;
+    return BudgetIcons.shopping;
   } else {
     return BudgetIcons.generic;
   }
