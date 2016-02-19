@@ -14,10 +14,11 @@ var {
 } = React;
 
 var AccountIcons = {
-  checking: require('image!tellur'),
-  credit: require('image!tellur'),
-  investment: require('image!tellur'),
-  savings: require('image!tellur')
+  checking: require('image!checkbook'),
+  credit: require('image!credit_card'),
+  investment: require('image!line_chart'),
+  savings: require('image!savings'),
+  general: require('image!savings')
 };
 
 function accountIcon (balance) {
@@ -28,8 +29,10 @@ function accountIcon (balance) {
     return AccountIcons.savings;
   } else if (name === "My Credit Card") {
     return AccountIcons.credit;
-  } else if (name === "My Brokerage") {
+  } else if (name === "My Retirement") {
     return AccountIcons.investment;
+  } else {
+    return AccountIcons.general;
   }
 }
 
@@ -60,7 +63,7 @@ var BalanceView = React.createClass({
     var balance = this.props.balance;
     return (
 	<View style={styles.view.container}>
-	  <Image source={accountIcon(balance)} style={styles.view.image}/>
+	  <Image source={accountIcon(balance)} style={styles.view.image} resizeMode={'contain'} />
 	  <Text style={styles.view.text}>{Currency.format(balance.balance, 0)}</Text>
 	</View>
     );
@@ -102,8 +105,7 @@ var styles = {
       fontSize: 64
     },
     image: {
-      height: 40,
-      width: 40,
+      width: 50,
       marginRight: 12
     }
   }),

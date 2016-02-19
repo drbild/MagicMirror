@@ -61,8 +61,6 @@ var QuoteView = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    borderColor: 'white',
-    borderWidth: 1,
     flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-end',
