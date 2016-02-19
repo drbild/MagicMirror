@@ -64,15 +64,13 @@ var MagicMirror = React.createClass({
         <View style={[styles.row, styles.margin]}>
            <TellurView />
         </View>
-        <View style={styles.stocks}>
+        <View style={styles.quotes}>
 	  <QuoteView />
         </View>
       </View>
     );
   }
 });
-
-//          <StockView style={{width: '100%'}} symbols={stocks}></StockView>
 
 var styles = StyleSheet.create({
   container: {
@@ -114,7 +112,7 @@ var styles = StyleSheet.create({
   margin: {
     marginBottom: 30
   },
-  stocks: {
+  quotes: {
     flex: 1,
     position: 'absolute',
     bottom: 0,

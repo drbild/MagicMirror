@@ -47,7 +47,7 @@ var QuoteView = React.createClass({
 
     if (quote) {
       return (
-	  <View style={[styles.container, {opacity: this.getTweeningValue('opacity')}]}>
+	  <View style={[styles.container, {opacity: this.getTweeningValue('opacity')}, this.props.style]}>
 	    <Text style={styles.text}>{quote.text}</Text>
 	    <Text style={styles.author}>—{quote.author}</Text>
 	  </View>
@@ -67,7 +67,8 @@ var styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontSize: 18
+    fontSize: 18,
+    textAlign: 'right'
   },
   author: {
     color: '#fff',
@@ -77,11 +78,6 @@ var styles = StyleSheet.create({
 });
 
 module.exports = QuoteView;
-
-// var quotes = [
-//   {"text": "Hello World",
-//    "author": "Unknown"}
-// ];
 
 var quotes = [
 {"text" : "Too many people spend money they earned..to buy things they don’t want..to impress people that they don’t like.",
@@ -182,8 +178,6 @@ var quotes = [
  "author" : "Thomas A. Edison"},
 {"text" : "If you don’t value your time, neither will others. Stop giving away your time and talents. Value what you know & start charging for it.",
  "author" : "Kim Garst"},
-{"text" : "Here’s to the crazy ones. The misfits. The rebels. The troublemakers. The round pegs in the square holes. The ones who see things differently. They’re not fond of rules. And they have no respect for the status quo. You can quote them, disagree with them, glorify or vilify them. About the only thing you can’t do is ignore them. Because they change things. They push the human race forward. And while some may see them as the crazy ones, we see genius. Because the people who are crazy enough to think they can change the world, are the ones who do.",
- "author" : "Steve Jobs"},
 {"text" : "The habit of saving is itself an education; it fosters every virtue, teaches self-denial, cultivates the sense of order, trains to forethought, and so broadens the mind.",
  "author" : "T.T. Munger"},
 {"text" : "Don’t tell me what you value, show me your budget, and I’ll tell you what you value.”",
@@ -222,8 +216,6 @@ var quotes = [
  "author" : "Ayn Rand"},
 {"text" : "Don’t let the fear of losing be greater than the excitement of winning.",
  "author" : "Robert Kiyosaki"},
-{"text" : "You can’t connect the dots looking forward; you can only connect them looking backwards. So you have to trust that the dots will somehow connect in your future. You have to trust in something – your gut, destiny, life, karma, whatever. This approach has never let me down, and it has made all the difference in my life.",
- "author" : "Steve Jobs"},
 {"text" : "Let no feeling of discouragement prey upon you, and in the end you are sure to succeed.",
  "author" : "Abraham Lincoln"},
 {"text" : "Screw it, Let’s do it!",
