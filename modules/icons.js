@@ -4,11 +4,26 @@ var Config = require('../env.js'),
     _      = require('lodash')
 
 var AccountIcons = {
-  checking: require('image!checkbook'),
-  credit: require('image!credit_card'),
-  investment: require('image!line_chart'),
-  savings: require('image!savings'),
-  general: require('image!savings')
+  checking: {
+    white: require('image!checkbook'),
+    black: require('image!checkbook_black')
+  },
+  credit: {
+    white: require('image!credit_card'),
+    black: require('image!credit_card_black')
+  },
+  investment: {
+    white: require('image!line_chart'),
+    black: require('image!line_chart_black')
+  },
+  savings: {
+    white: require('image!savings'),
+    black: require('image!savings_black')
+  },
+  general: {
+    white: require('image!savings'),
+    black: require('image!savings_black')
+  }
 };
 
 var CategoryIcons = {
@@ -18,19 +33,19 @@ var CategoryIcons = {
   generic: require('image!tellur'),
 };
 
-function iconForAccount (name) {
+function iconForAccount (name, color = 'white') {
   var accounts = Config.accounts;
 
   if (_.includes(accounts.checking, name)) {
-    return AccountIcons.checking;
+    return AccountIcons.checking[color];
   } else if (_.includes(accounts.credit, name)) {
-    return AccountIcons.credit;
+    return AccountIcons.credit[color];
   } else if (_.includes(accounts.investment, name)) {
-    return AccountIcons.investment;
+    return AccountIcons.investment[color];
   } else if (_.includes(accounts.savings, name)) {
-    return AccountIcons.savings;
+    return AccountIcons.savings[color];
   } else {
-    return AccountIcons.general;
+    return AccountIcons.general[color];
   }
 }
 
