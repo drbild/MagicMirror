@@ -1,46 +1,19 @@
 'use strict';
 
-var React    = require('react-native'),
-    Styles   = require('../styles.js'),
-    Config   = require('../env.js'),
-    Currency = require('../modules/currency.js'),
+var React     = require('react-native'),
+    Styles    = require('../styles.js'),
+    Config    = require('../env.js'),
+    Currency  = require('../modules/currency.js'),
     DonutView = require('./donut'),
-    _        = require('lodash');
+    Icons     = require('../modules/icons.js'),
+    _         = require('lodash');
 
 var {
   StyleSheet,
   View,
   Text,
   Image,
-  ART,
 } = React;
-
-var {
-  Surface,
-  Path,
-  Group,
-  Transform,
-  Shape
-} = ART;
-
-var BudgetIcons = {
-  entertainment: require('image!ticket'),
-  food: require('image!cutlery'),
-  shopping: require('image!shopping_basket'),
-  generic: require('image!tellur'),
-};
-
-function budgetIcon (budget) {
-  if (budget.category === 'entertainment') {
-    return BudgetIcons.entertainment;
-  } else if (budget.category === 'food') {
-    return BudgetIcons.food;
-  } else if (budget.category === 'shopping' | budget.category === 'clothing') {
-    return BudgetIcons.shopping;
-  } else {
-    return BudgetIcons.generic;
-  }
-}
 
 function filterBudgets (notes) {
   return _.chain(notes)
@@ -74,7 +47,7 @@ var BudgetView = React.createClass({
 	<View style={styles.view.container}>
 	  <View style={{flexDirection: 'column', height: 102, width: 102}}>
 	    <DonutView style={{position: 'absolute', left: 0, right: 0}} amount={amount} fillColor={'#fff'} thickness={14} radius={50} />
-	    <Image source={budgetIcon(budget)} style={styles.view.image} resizeMode={'contain'} />
+	    <Image source={Icons.forCategory(budget.category)} style={styles.view.image} resizeMode={'contain'} />
 	  </View>
 	  <Text style={styles.view.text}>{Currency.format(budget.remaining, 0)} left</Text>
 	</View>

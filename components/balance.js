@@ -1,10 +1,11 @@
 'use strict';
 
-var React = require('react-native'),
-    Styles = require('../styles.js'),
-    Config = require('../env.js'),
+var React    = require('react-native'),
+    Styles   = require('../styles.js'),
+    Config   = require('../env.js'),
     Currency = require('../modules/currency.js'),
-    _ = require('lodash');
+    Icons    = require('../modules/icons.js'),
+    _        = require('lodash');
 
 var {
   StyleSheet,
@@ -12,29 +13,6 @@ var {
   Text,
   Image
 } = React;
-
-var AccountIcons = {
-  checking: require('image!checkbook'),
-  credit: require('image!credit_card'),
-  investment: require('image!line_chart'),
-  savings: require('image!savings'),
-  general: require('image!savings')
-};
-
-function accountIcon (balance) {
-  var name = balance.account;
-  if (name === "My Checking") {
-    return AccountIcons.checking;
-  } else if (name === "My Savings") {
-    return AccountIcons.savings;
-  } else if (name === "My Credit Card") {
-    return AccountIcons.credit;
-  } else if (name === "My Retirement") {
-    return AccountIcons.investment;
-  } else {
-    return AccountIcons.general;
-  }
-}
 
 function filterBalances (notes) {
   return _.chain(notes)
@@ -63,7 +41,7 @@ var BalanceView = React.createClass({
     var balance = this.props.balance;
     return (
 	<View style={styles.view.container}>
-	  <Image source={accountIcon(balance)} style={styles.view.image} resizeMode={'contain'} />
+	  <Image source={Icons.forAccount(balance.account)} style={styles.view.image} resizeMode={'contain'} />
 	  <Text style={styles.view.text}>{Currency.format(balance.balance, 0)}</Text>
 	</View>
     );
